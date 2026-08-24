@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rider Dispatch Board — Weekly</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #14181C; color: #EDEEF0; font-family: 'JetBrains Mono', monospace; }
+  .disp { font-family: 'Barlow Condensed', sans-serif; }
+  .brand-stripe { height: 4px; background: #C81E05; }
+  .stub-row { position: relative; }
+  .stub-row::before {
+    content: "";
+    position: absolute;
+    left: -1px; top: 0; bottom: 0;
+    width: 1px;
+    background-image: repeating-linear-gradient(to bottom, #3A434B 0, #3A434B 4px, transparent 4px, transparent 9px);
+  }
+  .metric-bar-track { background: #262E35; }
+  select.period-select {
+    background: #1B2126; color: #EDEEF0; border: 1px solid #2B333A; border-radius: 4px;
+    padding: 7px 10px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; cursor: pointer;
+  }
+  .nav-link { color: #8B95A1; text-decoration: none; font-size: 12px; }
+  .nav-link:hover { color: #F0A202; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #33404A; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- Fallback data, used only if ./data/manifest.json can't be fetched
+     (e.g. previewing this file on its own, without the data/ folder next to it) -->
+<script id="fallback-manifest" type="application/json">
+{"weeks":[{"file":"2026-07-27.json","label":"Jul 20\u201327, 2026","date":"2026-07-27"}],"months":[{"file":"2026-07.json","label":"July 2026","date":"2026-07-27","weeks_included":1}]}
+</script>
+<script id="fallback-week" type="application/json">
+{"week_label":"Jul 20\u201327, 2026","period_days":8,"start_date":"2026-07-20","end_date":"2026-07-27","riders":[{"rider_name":"Ekasiba Joel","vehicle_type":"BICYCLE","orders_completed":117,"orders_assigned_total":135,"orders_rejected":7,"orders_unaccepted":11,"rejection_rate":5.19,"unacceptance_rate":8.15,"decline_rate":13.33,"delta_time":7.23,"avg_distance_per_trip":2.84,"days_worked":8.0,"attendance_pct":100.0,"rating":4.0,"eligible_for_scoring":true},{"rider_name":"Erick mwancha Peter","vehicle_type":"MOTORCYCLE","orders_completed":116,"orders_assigned_total":149,"orders_rejected":22,"orders_unaccepted":11,"rejection_rate":14.77,"unacceptance_rate":7.38,"decline_rate":22.15,"delta_time":6.47,"avg_distance_per_trip":7.86,"days_worked":8.0,"attendance_pct":100.0,"rating":4.7,"eligible_for_scoring":true},{"rider_name":"Kevin Aloo","vehicle_type":"MOTORCYCLE","orders_completed":100,"orders_assigned_total":108,"orders_rejected":7,"orders_unaccepted":1,"rejection_rate":6.48,"unacceptance_rate":0.93,"decline_rate":7.41,"delta_time":7.92,"avg_distance_per_trip":5.83,"days_worked":8.0,"attendance_pct":100.0,"rating":4.7,"eligible_for_scoring":true},{"rider_name":"Jackson Mahila","vehicle_type":"BICYCLE","orders_completed":96,"orders_assigned_total":121,"orders_rejected":18,"orders_unaccepted":7,"rejection_rate":14.88,"unacceptance_rate":5.79,"decline_rate":20.66,"delta_time":7.41,"avg_distance_per_trip":5.13,"days_worked":8.0,"attendance_pct":100.0,"rating":4.0,"eligible_for_scoring":true},{"rider_name":"Erick Makanda","vehicle_type":"MOTORCYCLE","orders_completed":89,"orders_assigned_total":119,"orders_rejected":17,"orders_unaccepted":13,"rejection_rate":14.29,"unacceptance_rate":10.92,"decline_rate":25.21,"delta_time":9.54,"avg_distance_per_trip":7.0,"days_worked":8.0,"attendance_pct":100.0,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Samuel Wachira","vehicle_type":"MOTORCYCLE","orders_completed":88,"orders_assigned_total":95,"orders_rejected":5,"orders_unaccepted":2,"rejection_rate":5.26,"unacceptance_rate":2.11,"decline_rate":7.37,"delta_time":9.34,"avg_distance_per_trip":5.55,"days_worked":8.0,"attendance_pct":100.0,"rating":4.6,"eligible_for_scoring":true},{"rider_name":"Abdulaziz Juma","vehicle_type":"BICYCLE","orders_completed":78,"orders_assigned_total":119,"orders_rejected":23,"orders_unaccepted":18,"rejection_rate":19.33,"unacceptance_rate":15.13,"decline_rate":34.45,"delta_time":8.79,"avg_distance_per_trip":2.69,"days_worked":8.0,"attendance_pct":100.0,"rating":4.1,"eligible_for_scoring":true},{"rider_name":"Harrison Oriama","vehicle_type":"MOTORCYCLE","orders_completed":77,"orders_assigned_total":147,"orders_rejected":41,"orders_unaccepted":29,"rejection_rate":27.89,"unacceptance_rate":19.73,"decline_rate":47.62,"delta_time":10.51,"avg_distance_per_trip":9.77,"days_worked":8.0,"attendance_pct":100.0,"rating":4.6,"eligible_for_scoring":true},{"rider_name":"Charles Njeka","vehicle_type":"MOTORCYCLE","orders_completed":76,"orders_assigned_total":84,"orders_rejected":8,"orders_unaccepted":0,"rejection_rate":9.52,"unacceptance_rate":0.0,"decline_rate":9.52,"delta_time":6.55,"avg_distance_per_trip":4.8,"days_worked":8.0,"attendance_pct":100.0,"rating":4.5,"eligible_for_scoring":true},{"rider_name":"Nicolas  Imbeywa","vehicle_type":"MOTORCYCLE","orders_completed":75,"orders_assigned_total":97,"orders_rejected":14,"orders_unaccepted":8,"rejection_rate":14.43,"unacceptance_rate":8.25,"decline_rate":22.68,"delta_time":10.72,"avg_distance_per_trip":7.58,"days_worked":8.0,"attendance_pct":100.0,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Gideon Okumu ","vehicle_type":"BICYCLE","orders_completed":73,"orders_assigned_total":82,"orders_rejected":6,"orders_unaccepted":3,"rejection_rate":7.32,"unacceptance_rate":3.66,"decline_rate":10.98,"delta_time":7.62,"avg_distance_per_trip":3.45,"days_worked":8.0,"attendance_pct":100.0,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Ezekia Wamalwa ","vehicle_type":"BICYCLE","orders_completed":71,"orders_assigned_total":87,"orders_rejected":7,"orders_unaccepted":9,"rejection_rate":8.05,"unacceptance_rate":10.34,"decline_rate":18.39,"delta_time":11.58,"avg_distance_per_trip":2.67,"days_worked":7.0,"attendance_pct":87.5,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Daniel Namaswa","vehicle_type":"MOTORCYCLE","orders_completed":70,"orders_assigned_total":82,"orders_rejected":8,"orders_unaccepted":4,"rejection_rate":9.76,"unacceptance_rate":4.88,"decline_rate":14.63,"delta_time":8.9,"avg_distance_per_trip":5.79,"days_worked":7.0,"attendance_pct":87.5,"rating":4.0,"eligible_for_scoring":true},{"rider_name":"Lenton  Kamau ","vehicle_type":"BICYCLE","orders_completed":70,"orders_assigned_total":98,"orders_rejected":15,"orders_unaccepted":13,"rejection_rate":15.31,"unacceptance_rate":13.27,"decline_rate":28.57,"delta_time":14.03,"avg_distance_per_trip":3.22,"days_worked":8.0,"attendance_pct":100.0,"rating":4.2,"eligible_for_scoring":true},{"rider_name":"Richard Wena","vehicle_type":"BICYCLE","orders_completed":69,"orders_assigned_total":79,"orders_rejected":8,"orders_unaccepted":2,"rejection_rate":10.13,"unacceptance_rate":2.53,"decline_rate":12.66,"delta_time":6.68,"avg_distance_per_trip":2.82,"days_worked":5.0,"attendance_pct":62.5,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Arnold Lusire","vehicle_type":"BICYCLE","orders_completed":68,"orders_assigned_total":85,"orders_rejected":9,"orders_unaccepted":8,"rejection_rate":10.59,"unacceptance_rate":9.41,"decline_rate":20.0,"delta_time":10.06,"avg_distance_per_trip":2.16,"days_worked":8.0,"attendance_pct":100.0,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Donald Mahila","vehicle_type":"BICYCLE","orders_completed":66,"orders_assigned_total":108,"orders_rejected":12,"orders_unaccepted":30,"rejection_rate":11.11,"unacceptance_rate":27.78,"decline_rate":38.89,"delta_time":7.56,"avg_distance_per_trip":2.53,"days_worked":6.0,"attendance_pct":75.0,"rating":4.5,"eligible_for_scoring":true},{"rider_name":"Benjamin Oliana","vehicle_type":"MOTORCYCLE","orders_completed":64,"orders_assigned_total":92,"orders_rejected":18,"orders_unaccepted":10,"rejection_rate":19.57,"unacceptance_rate":10.87,"decline_rate":30.43,"delta_time":8.81,"avg_distance_per_trip":8.4,"days_worked":8.0,"attendance_pct":100.0,"rating":4.8,"eligible_for_scoring":true},{"rider_name":"Emmanuel Kona","vehicle_type":"BICYCLE","orders_completed":64,"orders_assigned_total":77,"orders_rejected":11,"orders_unaccepted":2,"rejection_rate":14.29,"unacceptance_rate":2.6,"decline_rate":16.88,"delta_time":10.27,"avg_distance_per_trip":3.72,"days_worked":7.0,"attendance_pct":87.5,"rating":4.0,"eligible_for_scoring":true},{"rider_name":"Samuel Kigathi","vehicle_type":"MOTORCYCLE","orders_completed":58,"orders_assigned_total":68,"orders_rejected":6,"orders_unaccepted":4,"rejection_rate":8.82,"unacceptance_rate":5.88,"decline_rate":14.71,"delta_time":6.33,"avg_distance_per_trip":4.89,"days_worked":7.0,"attendance_pct":87.5,"rating":4.7,"eligible_for_scoring":true},{"rider_name":"Luice Levy","vehicle_type":"MOTORCYCLE","orders_completed":58,"orders_assigned_total":103,"orders_rejected":23,"orders_unaccepted":22,"rejection_rate":22.33,"unacceptance_rate":21.36,"decline_rate":43.69,"delta_time":14.57,"avg_distance_per_trip":4.22,"days_worked":8.0,"attendance_pct":100.0,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Godfrey Kayugira","vehicle_type":"MOTORCYCLE","orders_completed":58,"orders_assigned_total":69,"orders_rejected":8,"orders_unaccepted":3,"rejection_rate":11.59,"unacceptance_rate":4.35,"decline_rate":15.94,"delta_time":11.83,"avg_distance_per_trip":5.4,"days_worked":8.0,"attendance_pct":100.0,"rating":4.5,"eligible_for_scoring":true},{"rider_name":"Geofry Ouma","vehicle_type":"MOTORCYCLE","orders_completed":57,"orders_assigned_total":90,"orders_rejected":25,"orders_unaccepted":8,"rejection_rate":27.78,"unacceptance_rate":8.89,"decline_rate":36.67,"delta_time":11.16,"avg_distance_per_trip":8.35,"days_worked":8.0,"attendance_pct":100.0,"rating":4.7,"eligible_for_scoring":true},{"rider_name":"Harylinsen Mukhavani","vehicle_type":"BICYCLE","orders_completed":57,"orders_assigned_total":64,"orders_rejected":5,"orders_unaccepted":2,"rejection_rate":7.81,"unacceptance_rate":3.12,"decline_rate":10.94,"delta_time":8.88,"avg_distance_per_trip":4.63,"days_worked":8.0,"attendance_pct":100.0,"rating":4.7,"eligible_for_scoring":true},{"rider_name":"Gilbert Shibure","vehicle_type":"MOTORCYCLE","orders_completed":56,"orders_assigned_total":68,"orders_rejected":8,"orders_unaccepted":4,"rejection_rate":11.76,"unacceptance_rate":5.88,"decline_rate":17.65,"delta_time":6.11,"avg_distance_per_trip":5.37,"days_worked":6.0,"attendance_pct":75.0,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Joseph Karimi","vehicle_type":"MOTORCYCLE","orders_completed":56,"orders_assigned_total":65,"orders_rejected":4,"orders_unaccepted":5,"rejection_rate":6.15,"unacceptance_rate":7.69,"decline_rate":13.85,"delta_time":14.05,"avg_distance_per_trip":5.79,"days_worked":7.0,"attendance_pct":87.5,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Justine Mukoto","vehicle_type":"MOTORCYCLE","orders_completed":54,"orders_assigned_total":72,"orders_rejected":17,"orders_unaccepted":1,"rejection_rate":23.61,"unacceptance_rate":1.39,"decline_rate":25.0,"delta_time":9.52,"avg_distance_per_trip":9.7,"days_worked":8.0,"attendance_pct":100.0,"rating":4.8,"eligible_for_scoring":true},{"rider_name":"Geofrey Ekisa","vehicle_type":"MOTORCYCLE","orders_completed":52,"orders_assigned_total":68,"orders_rejected":6,"orders_unaccepted":10,"rejection_rate":8.82,"unacceptance_rate":14.71,"decline_rate":23.53,"delta_time":6.42,"avg_distance_per_trip":8.17,"days_worked":7.0,"attendance_pct":87.5,"rating":4.8,"eligible_for_scoring":true},{"rider_name":"Oscar Ikwa","vehicle_type":"MOTORCYCLE","orders_completed":47,"orders_assigned_total":99,"orders_rejected":39,"orders_unaccepted":13,"rejection_rate":39.39,"unacceptance_rate":13.13,"decline_rate":52.53,"delta_time":27.36,"avg_distance_per_trip":6.77,"days_worked":7.0,"attendance_pct":87.5,"rating":4.6,"eligible_for_scoring":true},{"rider_name":"Henry Wesonga","vehicle_type":"MOTORCYCLE","orders_completed":47,"orders_assigned_total":100,"orders_rejected":23,"orders_unaccepted":30,"rejection_rate":23.0,"unacceptance_rate":30.0,"decline_rate":53.0,"delta_time":33.09,"avg_distance_per_trip":10.33,"days_worked":8.0,"attendance_pct":100.0,"rating":4.4,"eligible_for_scoring":true},{"rider_name":"Victor Odhiambo","vehicle_type":"MOTORCYCLE","orders_completed":42,"orders_assigned_total":47,"orders_rejected":4,"orders_unaccepted":1,"rejection_rate":8.51,"unacceptance_rate":2.13,"decline_rate":10.64,"delta_time":12.12,"avg_distance_per_trip":6.16,"days_worked":8.0,"attendance_pct":100.0,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Sydney  Nyabando ","vehicle_type":"BICYCLE","orders_completed":42,"orders_assigned_total":58,"orders_rejected":7,"orders_unaccepted":9,"rejection_rate":12.07,"unacceptance_rate":15.52,"decline_rate":27.59,"delta_time":8.86,"avg_distance_per_trip":2.09,"days_worked":7.0,"attendance_pct":87.5,"rating":4.0,"eligible_for_scoring":true},{"rider_name":"Samuel Onsongo","vehicle_type":"MOTORCYCLE","orders_completed":40,"orders_assigned_total":46,"orders_rejected":4,"orders_unaccepted":2,"rejection_rate":8.7,"unacceptance_rate":4.35,"decline_rate":13.04,"delta_time":12.75,"avg_distance_per_trip":5.19,"days_worked":8.0,"attendance_pct":100.0,"rating":4.3,"eligible_for_scoring":true},{"rider_name":"James  Otieno","vehicle_type":"BICYCLE","orders_completed":40,"orders_assigned_total":44,"orders_rejected":2,"orders_unaccepted":2,"rejection_rate":4.55,"unacceptance_rate":4.55,"decline_rate":9.09,"delta_time":22.35,"avg_distance_per_trip":4.44,"days_worked":7.0,"attendance_pct":87.5,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Essej  Brothers","vehicle_type":"MOTORCYCLE","orders_completed":39,"orders_assigned_total":47,"orders_rejected":6,"orders_unaccepted":2,"rejection_rate":12.77,"unacceptance_rate":4.26,"decline_rate":17.02,"delta_time":9.41,"avg_distance_per_trip":3.37,"days_worked":6.0,"attendance_pct":75.0,"rating":4.5,"eligible_for_scoring":true},{"rider_name":"silah imende","vehicle_type":"MOTORCYCLE","orders_completed":38,"orders_assigned_total":47,"orders_rejected":5,"orders_unaccepted":4,"rejection_rate":10.64,"unacceptance_rate":8.51,"decline_rate":19.15,"delta_time":11.18,"avg_distance_per_trip":4.57,"days_worked":7.0,"attendance_pct":87.5,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Douglas Emerikwa","vehicle_type":"MOTORCYCLE","orders_completed":37,"orders_assigned_total":44,"orders_rejected":7,"orders_unaccepted":0,"rejection_rate":15.91,"unacceptance_rate":0.0,"decline_rate":15.91,"delta_time":6.43,"avg_distance_per_trip":8.74,"days_worked":4.0,"attendance_pct":50.0,"rating":4.5,"eligible_for_scoring":true},{"rider_name":"Moses Owino","vehicle_type":"MOTORCYCLE","orders_completed":36,"orders_assigned_total":83,"orders_rejected":30,"orders_unaccepted":17,"rejection_rate":36.14,"unacceptance_rate":20.48,"decline_rate":56.63,"delta_time":14.67,"avg_distance_per_trip":7.98,"days_worked":7.0,"attendance_pct":87.5,"rating":5.0,"eligible_for_scoring":true},{"rider_name":"Oliver Ochieng","vehicle_type":"MOTORCYCLE","orders_completed":30,"orders_assigned_total":41,"orders_rejected":5,"orders_unaccepted":6,"rejection_rate":12.2,"unacceptance_rate":14.63,"decline_rate":26.83,"delta_time":45.4,"avg_distance_per_trip":5.81,"days_worked":7.0,"attendance_pct":87.5,"rating":4.7,"eligible_for_scoring":true},{"rider_name":"Ababu  Claudius ","vehicle_type":"MOTORCYCLE","orders_completed":30,"orders_assigned_total":51,"orders_rejected":14,"orders_unaccepted":7,"rejection_rate":27.45,"unacceptance_rate":13.73,"decline_rate":41.18,"delta_time":10.8,"avg_distance_per_trip":8.73,"days_worked":6.0,"attendance_pct":75.0,"rating":4.3,"eligible_for_scoring":true},{"rider_name":"Bonface mkuto Lumula","vehicle_type":"MOTORCYCLE","orders_completed":24,"orders_assigned_total":35,"orders_rejected":8,"orders_unaccepted":3,"rejection_rate":22.86,"unacceptance_rate":8.57,"decline_rate":31.43,"delta_time":11.46,"avg_distance_per_trip":9.83,"days_worked":8.0,"attendance_pct":100.0,"rating":4.8,"eligible_for_scoring":false},{"rider_name":"Hubert Lusangale","vehicle_type":"BICYCLE","orders_completed":23,"orders_assigned_total":44,"orders_rejected":11,"orders_unaccepted":10,"rejection_rate":25.0,"unacceptance_rate":22.73,"decline_rate":47.73,"delta_time":185.13,"avg_distance_per_trip":2.88,"days_worked":5.0,"attendance_pct":62.5,"rating":4.0,"eligible_for_scoring":false},{"rider_name":"Derrick Moseti","vehicle_type":"MOTORCYCLE","orders_completed":21,"orders_assigned_total":34,"orders_rejected":7,"orders_unaccepted":6,"rejection_rate":20.59,"unacceptance_rate":17.65,"decline_rate":38.24,"delta_time":52.67,"avg_distance_per_trip":3.76,"days_worked":4.0,"attendance_pct":50.0,"rating":4.1,"eligible_for_scoring":false},{"rider_name":"Dan Obukunyang","vehicle_type":"BICYCLE","orders_completed":21,"orders_assigned_total":31,"orders_rejected":6,"orders_unaccepted":4,"rejection_rate":19.35,"unacceptance_rate":12.9,"decline_rate":32.26,"delta_time":6.1,"avg_distance_per_trip":2.38,"days_worked":3.0,"attendance_pct":37.5,"rating":4.7,"eligible_for_scoring":false},{"rider_name":"TEDDY NJERI","vehicle_type":"BICYCLE","orders_completed":20,"orders_assigned_total":23,"orders_rejected":3,"orders_unaccepted":0,"rejection_rate":13.04,"unacceptance_rate":0.0,"decline_rate":13.04,"delta_time":8.2,"avg_distance_per_trip":4.75,"days_worked":2.0,"attendance_pct":25.0,"rating":5.0,"eligible_for_scoring":false},{"rider_name":"Fredrick Okasiba","vehicle_type":"MOTORCYCLE","orders_completed":19,"orders_assigned_total":30,"orders_rejected":6,"orders_unaccepted":5,"rejection_rate":20.0,"unacceptance_rate":16.67,"decline_rate":36.67,"delta_time":12.16,"avg_distance_per_trip":10.88,"days_worked":6.0,"attendance_pct":75.0,"rating":4.8,"eligible_for_scoring":false},{"rider_name":"Jackston Akenga","vehicle_type":"MOTORCYCLE","orders_completed":17,"orders_assigned_total":24,"orders_rejected":2,"orders_unaccepted":5,"rejection_rate":8.33,"unacceptance_rate":20.83,"decline_rate":29.17,"delta_time":17.94,"avg_distance_per_trip":8.59,"days_worked":7.0,"attendance_pct":87.5,"rating":5.0,"eligible_for_scoring":false},{"rider_name":"Sabato  Alvine","vehicle_type":"MOTORCYCLE","orders_completed":16,"orders_assigned_total":16,"orders_rejected":0,"orders_unaccepted":0,"rejection_rate":0.0,"unacceptance_rate":0.0,"decline_rate":0.0,"delta_time":17.38,"avg_distance_per_trip":7.91,"days_worked":7.0,"attendance_pct":87.5,"rating":4.8,"eligible_for_scoring":false},{"rider_name":"John Ochieng ","vehicle_type":"MOTORCYCLE","orders_completed":14,"orders_assigned_total":27,"orders_rejected":8,"orders_unaccepted":5,"rejection_rate":29.63,"unacceptance_rate":18.52,"decline_rate":48.15,"delta_time":13.21,"avg_distance_per_trip":9.44,"days_worked":3.0,"attendance_pct":37.5,"rating":4.0,"eligible_for_scoring":false},{"rider_name":"Brian Ngetich","vehicle_type":"MOTORCYCLE","orders_completed":2,"orders_assigned_total":3,"orders_rejected":0,"orders_unaccepted":1,"rejection_rate":0.0,"unacceptance_rate":33.33,"decline_rate":33.33,"delta_time":9.0,"avg_distance_per_trip":13.8,"days_worked":1.0,"attendance_pct":12.5,"rating":5.0,"eligible_for_scoring":false},{"rider_name":"Elton Majina","vehicle_type":null,"orders_completed":0,"orders_assigned_total":2,"orders_rejected":2,"orders_unaccepted":0,"rejection_rate":100.0,"unacceptance_rate":0.0,"decline_rate":100.0,"delta_time":null,"avg_distance_per_trip":null,"days_worked":null,"attendance_pct":null,"rating":null,"eligible_for_scoring":false}]}
+</script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+const ANDO_LOGO = "data:image/jpeg;base64,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NOef5Us8DhgeI5rRur2KMY4yNup/JjHBbRtoTfpz76hhjlVy8uTpOeFRW1xKsV1GNPnnGuh5TAk2OBNHGxtIvpRs7InYntye16LEcrxj4WxWScnqfv6o3aNuqnFfjTPL/O2fuYSaRR0DVlmLHqf6AP/EACkQAQACAQIGAQMFAQAAAAAAAAEAESExYUFRcYGRoTAgsfAQcIDB0fH/2gAIAQEAAT8h/f8A20FdXWO60W4o7DNR84vVU1IYDHdIJIbXieJrEgMfacyrzR8XODrcEj4QoC1lhHVmh8LKYi5mrhQvo1ilMm6BKPtCLlpmO7OwytfedIPqJhg2iz2+Dx5E2fBBynnjeai0U0hXVS+0Mo4DRbWnN1RopSOf5iD3HbAQijqNwllAl/k4W5Zh2A1RlOHmEKQwuroJj8ORBz27winHjVjuZmo7PoLletsbDnL76Tg2q06ZBPA9TsRY1UrFskZWGWrck4dnwMkv2IRe9vBMrzYxjmCCs9VMLyYnRi5eAS+nGdrx6iH0ZOgB/U0j67Z+ECpeFQZwBr0qXChA4LJRrVH3i9LBdqgthK+QpdMOEr3uLQZe9I5dgjsT/poPwJXW17v8OcJY6lAR8i8c23B1hywHipk1miB6Dyd4vIpkrav0qBwiRVzUAeAWwI2GNyckju45undhnRlRh1pyg1pAeAeW6QjCa0AYEee05YoOTvKq6pVC/wCxfxspXQbfEgXNRreIlc+qWv177e69RcUzS+vn6N4xsJunNt/gB//aAAwDAQACAAMAAAAQ+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++gGuLGUrIz++++hTYoog8wO++++s+++u9+N++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//EACMRAQEAAQQBBAMBAAAAAAAAAAERIQAxQVGREGFxwSBggbH/2gAIAQMBAT8Q/Qxo2ocB2/RoXwyvIfZtmKnc202BACu0Z27Z/NScKWkX2kxwPOnOzILw3z1s33mp8gQIwXBVwlxcfWo5ECrVWF+PGkxY5iwb5pZyhjWx1gFxG4eNvxvXVnTha+R86Y4KqbobE4Ll+NJSwXbln/Jpxm4Y6C/RpgqyvZcL8geNO40EcJMHaz+GdPDSomZAM6EfOmo+PtKcrzJvrCwWHcCy9LdvxBgpoJg9QEFNCxh6CoC/ov8A/8QAJxEBAAEDAwMCBwAAAAAAAAAAAREAIUExUdEgYZFggRBxobHB4fD/2gAIAQIBAT8Q9BsrQc8UlTI10U/mp7IAzG806nbCJjvxUhaLz2fzQOQdRjTP0qD4WVdgjmoW44sc0OsIYtnZ6U6xdPvmkIGGhid/FGW/oAq9egvu0J29vAc1bVqoZfnQKWEeVfuUhFunvSAyZd3pFGToFGSlVL8FJC+hf//EACgQAQEAAgEEAQQBBQEAAAAAAAERACExQVFhgXEwkaHBIBBwgLHw0f/aAAgBAQABPxD+/wD3Z20fJwe3NqelGfIfsZ3zqwE0Cm++QIBuc7gDBmMYG2IkI9zDGqNTeEZWx6YQSZtqvkH8Y+col6z084fIS5fYDa4JYCEzfAfxjHHs2G6eSXeL+IKNcEaW6RkeSvedmBDHciPrHLEFU/sw66SLb5LpPJlEgDY9iJ3+gtulUoKj4Czqw65vWDg0N9Yv/ax/5QJGJwTwcbEadrXDVEIN77jn/CIVT7uDfip2GfrJSB2Va2KNdjVNhcvLEwQDAUsR0pvEtHdZ3bvAJ774AI50a08MleftiDLtmzRQHZRYyxxIaOmFiCibUUEyEmw+KV+DDym0ElH1tAey9sncWMk7cA8qHnBVEULgqF7Nxni4sf5xp+A3z4w0ifRZNRpeWpzqq/QEcmXoMo+094T77UKRT0uLtVH5Vy3q8opFOnJPON0Ki+B36wHDqfsYsZtG8wfgAesof4f/AG1ZB9qnUVfy4AAAAQDJaamccHiYxaqpCIpDvAzRYY3mI/4awm3dEAX3LhS07OovybcbQBRpaL5ADzgq1oQiP6yBcA/CP7+gnLXmhBJ2Gj4T0yz0irzolEcvmoY5Q7S9RD8ZKjcqwQ7BpiDqRZQIVHlxmpLlMoAaqz+jFlLQCEXTvD90EY+qKWfngIsoujvnCPfnAKzTQjjcD7xh1E0AQaIlJduJw4iHNUz/AEshILgSJtKAvK7LdPrR1qHjlMmm9u07q1eN5HwBiZ03Z5vP0uKQI3yEY5vagjyv8xxzoE/aHOWRJL4Uz+BEa/8AFhx+qcpb2/4Af//Z";
+
+/* ---------------------------------------------------------
+   SCORING CONFIG — Rejection and unacceptance are combined
+   into one metric (decline_rate) since both reflect the same
+   underlying behavior: a rider declining an assigned order.
+--------------------------------------------------------- */
+const WEIGHTS = {
+  orders_completed: 0.25,
+  decline_rate: 0.25,
+  delta_time: 0.20,
+  attendance_pct: 0.15,
+  rating: 0.15,
+};
+const WEEKLY_ELIGIBILITY_MIN_ORDERS = 25;
+
+const METRIC_META = [
+  { key: "orders_completed", label: "Orders Completed",        short: "ORD", unit: "",    weight: WEIGHTS.orders_completed, higherIsBetter: true },
+  { key: "decline_rate",     label: "Rejection + Unacceptance", short: "DEC", unit: "%",   weight: WEIGHTS.decline_rate,     higherIsBetter: false },
+  { key: "delta_time",       label: "Delta Time",               short: "DLT", unit: "min", weight: WEIGHTS.delta_time,       higherIsBetter: false },
+  { key: "attendance_pct",   label: "Attendance",               short: "ATT", unit: "%",   weight: WEIGHTS.attendance_pct,   higherIsBetter: true },
+  { key: "rating",           label: "Rating",                   short: "RTG", unit: "\u2605", weight: WEIGHTS.rating,       higherIsBetter: true },
+];
+
+function percentileRanks(values) {
+  const sorted = [...values].sort((a, b) => a - b);
+  return values.map((v) => {
+    const countBelow = sorted.filter((s) => s < v).length;
+    const countEqual = sorted.filter((s) => s === v).length;
+    const denom = sorted.length - 1;
+    if (denom <= 0) return 0;
+    return ((countBelow + 0.5 * (countEqual - 1)) / denom) * 100;
+  });
+}
+
+function computeScoreboard(riders, eligibilityThreshold) {
+  const eligible = riders.filter((r) => Number(r.orders_completed) >= eligibilityThreshold);
+  const excludedCount = riders.length - eligible.length;
+
+  const percentiles = {};
+  METRIC_META.forEach((m) => {
+    const vals = eligible.map((r) => Number(r[m.key]) || 0);
+    const pctl = percentileRanks(vals);
+    percentiles[m.key] = m.higherIsBetter ? pctl : pctl.map((p) => 100 - p);
+  });
+
+  const scored = eligible.map((r, i) => {
+    const metricPctls = {};
+    let composite = 0;
+    METRIC_META.forEach((m) => {
+      const p = percentiles[m.key][i];
+      metricPctls[m.key] = p;
+      composite += p * m.weight;
+    });
+    return { ...r, metricPctls, composite };
+  });
+
+  scored.sort((a, b) => {
+    if (b.composite !== a.composite) return b.composite - a.composite;
+    return (a.decline_rate || 0) - (b.decline_rate || 0);
+  });
+  scored.forEach((r, i) => (r.rank = i + 1));
+
+  return {
+    ranked: scored,
+    excludedCount,
+    totalOrders: riders.reduce((s, r) => s + (Number(r.orders_completed) || 0), 0),
+  };
+}
+
+function SummaryStat({ label, value, muted, accent }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+      <div style={{ fontSize: 10.5, color: "#5C6670", letterSpacing: "0.08em" }}>{label}</div>
+      <div className="disp" style={{ fontSize: 22, fontWeight: 600, color: muted ? "#8B95A1" : (accent || "#EDEEF0") }}>
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function RankBadge({ rank }) {
+  const colors = { 1: "#C81E05", 2: "#C9CDD3", 3: "#B5793B" };
+  const c = colors[rank] || "#33404A";
+  return (
+    <div className="disp" style={{
+      width: 44, height: 44, borderRadius: "50%", border: `2px solid ${c}`,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontSize: 18, fontWeight: 700, color: c, flexShrink: 0,
+    }}>
+      {rank}
+    </div>
+  );
+}
+
+function RadarPolygon({ rider }) {
+  const size = 180, cx = size / 2, cy = size / 2, r = 62;
+  const n = METRIC_META.length;
+  const angle = (i) => (Math.PI * 2 * i) / n - Math.PI / 2;
+  const pointAt = (i, val) => {
+    const rad = (Math.max(0, Math.min(100, val)) / 100) * r;
+    return [cx + rad * Math.cos(angle(i)), cy + rad * Math.sin(angle(i))];
+  };
+  const gridPointAt = (i, frac) => {
+    const rad = frac * r;
+    return [cx + rad * Math.cos(angle(i)), cy + rad * Math.sin(angle(i))];
+  };
+  const dataPoints = METRIC_META.map((m, i) => pointAt(i, rider.metricPctls[m.key]));
+  const dataPath = dataPoints.map((p) => p.join(",")).join(" ");
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      {[0.33, 0.66, 1].map((frac, gi) => (
+        <polygon key={gi} points={METRIC_META.map((_, i) => gridPointAt(i, frac).join(",")).join(" ")}
+                 fill="none" stroke="#2B333A" strokeWidth="1" />
+      ))}
+      {METRIC_META.map((m, i) => {
+        const [x, y] = gridPointAt(i, 1);
+        return <line key={m.key} x1={cx} y1={cy} x2={x} y2={y} stroke="#2B333A" strokeWidth="1" />;
+      })}
+      <polygon points={dataPath} fill="#C81E05" fillOpacity="0.22" stroke="#C81E05" strokeWidth="2" />
+      {METRIC_META.map((m, i) => {
+        const [x, y] = gridPointAt(i, 1.24);
+        return (
+          <text key={m.key} x={x} y={y} fill="#8B95A1" fontSize="10.5"
+                textAnchor="middle" dominantBaseline="middle" fontFamily="JetBrains Mono, monospace">
+            {m.short}
+          </text>
+        );
+      })}
+    </svg>
+  );
+}
+
+function RiderRow({ rider, isExpanded, onToggle }) {
+  return (
+    <div className="stub-row" style={{
+      marginLeft: 8, marginBottom: 10,
+      background: rider.rank <= 3 ? "#231512" : "#1B2126",
+      border: `1px solid ${rider.rank === 1 ? "#C81E0555" : "#262E35"}`,
+      borderRadius: 4,
+    }}>
+      <div onClick={onToggle} style={{ display: "flex", alignItems: "center", gap: 18, padding: "14px 20px", cursor: "pointer", flexWrap: "wrap" }}>
+        <RankBadge rank={rider.rank} />
+        <div style={{ minWidth: 160 }}>
+          <div className="disp" style={{ fontSize: 18, fontWeight: 600 }}>{rider.rider_name}</div>
+          <div style={{ fontSize: 10.5, color: "#5C6670" }}>{rider.vehicle_type || ""}</div>
+        </div>
+        <div style={{ display: "flex", gap: 5, flex: 1, minWidth: 160, alignItems: "center" }}>
+          {METRIC_META.map((m) => (
+            <div key={m.key} title={`${m.label}: ${rider[m.key]}${m.unit}`} style={{ flex: 1 }}>
+              <div className="metric-bar-track" style={{ height: 5, borderRadius: 2, overflow: "hidden" }}>
+                <div style={{
+                  width: `${Math.max(0, Math.min(100, rider.metricPctls[m.key]))}%`, height: "100%",
+                  background: m.higherIsBetter ? "#F0A202" : "#C81E05",
+                }} />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ textAlign: "right", minWidth: 90 }}>
+          <div style={{ fontSize: 10, color: "#5C6670", letterSpacing: "0.08em" }}>SCORE</div>
+          <div className="disp" style={{ fontSize: 24, fontWeight: 700, color: "#C81E05" }}>{rider.composite.toFixed(1)}</div>
+        </div>
+        <div style={{ color: "#5C6670", transform: isExpanded ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>▾</div>
+      </div>
+      {isExpanded && (
+        <div style={{ borderTop: "1px dashed #2B333A", padding: "18px 20px 22px", display: "flex", gap: 32, flexWrap: "wrap" }}>
+          <RadarPolygon rider={rider} />
+          <div style={{ flex: 1, minWidth: 260, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 24px" }}>
+            {METRIC_META.map((m) => (
+              <div key={m.key} style={{ display: "flex", flexDirection: "column", gap: 2, borderBottom: "1px solid #23292F", paddingBottom: 6 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5 }}>
+                  <span style={{ color: "#8B95A1" }}>{m.label}</span>
+                  <span style={{ color: "#EDEEF0", fontWeight: 600 }}>
+                    {rider[m.key]}{m.unit}
+                    <span style={{ color: "#5C6670", fontWeight: 400 }}> · {rider.metricPctls[m.key].toFixed(0)}th pctl</span>
+                  </span>
+                </div>
+                {m.key === "decline_rate" && (
+                  <div style={{ fontSize: 10.5, color: "#5C6670" }}>
+                    {rider.rejection_rate}% rejected + {rider.unacceptance_rate}% unaccepted
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DataSourceBanner({ isLive }) {
+  if (isLive) return null;
+  return (
+    <div style={{ background: "#2A1210", border: "1px solid #C81E0555", color: "#E8846E", fontSize: 12, padding: "8px 32px", display: "flex", alignItems: "center", gap: 8 }}>
+      ⚠ Showing embedded sample data — data/manifest.json wasn't found alongside this file.
+      Once the data/ folder sits next to this file (e.g. your GitHub Pages repo), live data loads automatically.
+    </div>
+  );
+}
+
+function App() {
+  const [manifest, setManifest] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [weekData, setWeekData] = useState(null);
+  const [isLive, setIsLive] = useState(false);
+  const [expandedId, setExpandedId] = useState(null);
+
+  useEffect(() => {
+    fetch("./data/manifest.json")
+      .then((res) => { if (!res.ok) throw new Error("not found"); return res.json(); })
+      .then((m) => {
+        setManifest(m);
+        setIsLive(true);
+        if (m.weeks && m.weeks.length) setSelectedFile(m.weeks[0].file);
+      })
+      .catch(() => {
+        const m = JSON.parse(document.getElementById("fallback-manifest").textContent);
+        setManifest(m);
+        setIsLive(false);
+        if (m.weeks && m.weeks.length) setSelectedFile(m.weeks[0].file);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!selectedFile) return;
+    if (isLive) {
+      fetch("./data/" + selectedFile)
+        .then((res) => { if (!res.ok) throw new Error("not found"); return res.json(); })
+        .then(setWeekData)
+        .catch(() => {
+          setWeekData(JSON.parse(document.getElementById("fallback-week").textContent));
+        });
+    } else {
+      setWeekData(JSON.parse(document.getElementById("fallback-week").textContent));
+    }
+  }, [selectedFile, isLive]);
+
+  if (!manifest || !weekData) {
+    return <div style={{ padding: 40, color: "#8B95A1" }}>Loading dispatch board…</div>;
+  }
+
+  const { ranked, excludedCount, totalOrders } = computeScoreboard(weekData.riders || [], WEEKLY_ELIGIBILITY_MIN_ORDERS);
+  const top10 = ranked.slice(0, 10);
+  const avgDelta = ranked.length ? (ranked.reduce((s, r) => s + Number(r.delta_time || 0), 0) / ranked.length).toFixed(1) : "0";
+
+  return (
+    <div style={{ minHeight: "100vh" }}>
+      <div className="brand-stripe" />
+      <DataSourceBanner isLive={isLive} />
+      <div style={{ borderBottom: "1px solid #262E35", padding: "24px 32px 22px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <img src={ANDO_LOGO} alt="ando" style={{ width: 34, height: 34, borderRadius: 6, display: "block" }} />
+            <div className="disp" style={{ fontSize: 13, letterSpacing: "0.18em", color: "#8B95A1", fontWeight: 600 }}>
+              RIDER PERFORMANCE MANIFEST — WEEKLY TRACKER
+            </div>
+          </div>
+          <a className="nav-link" href="./monthly.html">Monthly Payout Board →</a>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", margin: "2px 0 18px" }}>
+          <h1 className="disp" style={{ fontSize: 40, fontWeight: 700, letterSpacing: "0.01em", margin: 0 }}>
+            WEEKLY DISPATCH BOARD
+          </h1>
+          {manifest.weeks && manifest.weeks.length > 1 ? (
+            <select className="period-select" value={selectedFile || ""} onChange={(e) => setSelectedFile(e.target.value)}>
+              {manifest.weeks.map((w) => <option key={w.file} value={w.file}>{w.label}</option>)}
+            </select>
+          ) : (
+            <span className="disp" style={{ fontSize: 18, color: "#8B95A1" }}>— {weekData.week_label}</span>
+          )}
+        </div>
+
+        <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
+          <SummaryStat label="ELIGIBLE RIDERS" value={ranked.length} accent="#F0A202" />
+          <SummaryStat label="TOTAL ORDERS (FLEET)" value={totalOrders} accent="#F0A202" />
+          <SummaryStat label="AVG DELTA TIME" value={avgDelta + " min"} accent="#F0A202" />
+          <SummaryStat label="BELOW THRESHOLD" value={excludedCount + " riders"} muted />
+        </div>
+      </div>
+
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", padding: "18px 32px", borderBottom: "1px solid #1D2429" }}>
+        {METRIC_META.map((m) => (
+          <div key={m.key} style={{ border: "1px solid #2B333A", borderRadius: 3, padding: "5px 10px", fontSize: 11, color: "#8B95A1", display: "flex", gap: 6, alignItems: "center" }}>
+            <span style={{ color: "#EDEEF0", fontWeight: 600 }}>{m.short}</span>
+            <span style={{ color: m.higherIsBetter ? "#F0A202" : "#C81E05" }}>{(m.weight * 100).toFixed(0)}%</span>
+          </div>
+        ))}
+        <div style={{ fontSize: 11, color: "#5C6670", alignSelf: "center", marginLeft: 4 }}>
+          · min. {WEEKLY_ELIGIBILITY_MIN_ORDERS} orders/week to qualify · voucher determined monthly, see Monthly Payout Board
+        </div>
+      </div>
+
+      <div style={{ padding: "20px 32px 48px" }}>
+        {top10.map((rider) => (
+          <RiderRow key={rider.rider_name} rider={rider} isExpanded={expandedId === rider.rider_name}
+                    onToggle={() => setExpandedId(expandedId === rider.rider_name ? null : rider.rider_name)} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

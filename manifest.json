@@ -1,0 +1,17 @@
+{
+  "weeks": [
+    {
+      "file": "2026-07-27.json",
+      "label": "Jul 20\u201327, 2026",
+      "date": "2026-07-27"
+    }
+  ],
+  "months": [
+    {
+      "file": "2026-07.json",
+      "label": "July 2026",
+      "date": "2026-07-27",
+      "weeks_included": 1
+    }
+  ]
+}

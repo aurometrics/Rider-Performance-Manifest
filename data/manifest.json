@@ -26,5 +26,12 @@
       "date": "2026-08-02"
     }
   ],
-  "months": []
+  "months": [
+    {
+      "file": "2026-08.json",
+      "label": "Jul\u2013Aug 2026",
+      "date": "2026-08-30",
+      "weeks_included": 5
+    }
+  ]
 }
